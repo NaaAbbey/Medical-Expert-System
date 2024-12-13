@@ -1,37 +1,43 @@
 from flask import Flask, request, jsonify
-from experta import KnowledgeEngine, Fact
-import psycopg2
+from flask_cors import CORS
+from experta import KnowledgeEngine, Fact, Rule
+#import psycopg2
+import pg8000
 
 app = Flask(__name__)
+CORS(app)
 
 # Connect to PostgreSQL
-conn = psycopg2.connect(
-    dbname="your_database",
-    user="your_user",
-    password="your_password",
-    host="localhost",
-    port="5432"
-)
+#conn = pg8000.connect(
+   # dbname="your_database",
+   # user="your_user",
+   # password="your_password",
+    #host="localhost",
+    #port="5432"
+#)
+#cursor = conn.cursor()
+#cursor.execute("SELECT * FROM my_table")
+#for row in cursor.fetchall():
+    #print(row)
+#conn.close()
 
 class TreatmentEngine(KnowledgeEngine):
-   # @Rule(Fact(symptom="fever"))
-    #def recommend_paracetamol(self):
-     #   print("Take paracetamol for fever.")
-      #  self.declare(Fact(recommendation="paracetamol"))
+    @Rule(Fact(symptom="fever"))
+    def recommend_paracetamol(self):
+        print("Take paracetamol for fever.")
+        self.declare(Fact(recommendation="paracetamol"))
     ...
 
-@app.route('/process', methods=['POST'])
+@app.route('/api/diagnose', methods=['POST'])
 def process():
-    data = request.json
-    symptom = data.get("symptom")
-
+    symptoms = request.json.get('symptoms', [])
     engine = TreatmentEngine()
     engine.reset()
-    engine.declare(Fact(symptom=symptom))
+    for symptom in symptoms:
+        engine.declare(Fact(symptom=symptom))
     engine.run()
-
-    # Return a mock response (adapt based on your engine's results)
-    return jsonify({"message": "Rule processed", "symptom": symptom})
+    recommendation = [fact['recommendation'] for fact in engine.facts.values() if 'recommendation' in fact]
+    return jsonify({'recommendation': recommendation})
 
 if __name__ == '__main__':
     app.run(debug=True)
