@@ -1,0 +1,147 @@
+/* Style the placeholder text */
+.styled-placeholder::placeholder {
+    color: #888; /* Change text color */
+    font-style: italic; /* Make text italic */
+    font-size: 14px; /* Adjust font size */
+    opacity: 0.8; /* Adjust visibility */
+}
+
+/* Optional: Style the input field itself */
+.styled-placeholder {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Style the button */
+.diagnose-button {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    border: none; /* Remove borders */
+    padding: 10px 20px; /* Add some padding */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove underline (if any) */
+    display: inline-block; /* Keep the button inline */
+    font-size: 16px; /* Set font size */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Add a pointer cursor on hover */
+    transition: background-color 0.3s, transform 0.2s; /* Add smooth transitions */
+}
+
+/* Add hover effect */
+.diagnose-button:hover {
+    background-color: #45a049; /* Slightly darker green */
+    transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+/* Optional: Add focus effect */
+.diagnose-button:focus {
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 5px #4CAF50; /* Add a subtle glow */
+}
+
+/* Container styling */
+.diagnosis-container {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9ff; /* Light blue background */
+    border-left: 5px solid #4caf50; /* Add a green accent border */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a modern look */
+    border-radius: 8px; /* Rounded corners */
+    font-family: 'Arial', sans-serif; /* Modern font */
+  }
+  
+  /* Header styling */
+  .diagnosis-container h3 {
+    margin: 0;
+    color: #333333; /* Darker text for better readability */
+    font-size: 1.5rem;
+    border-bottom: 1px solid #ddd; /* Subtle underline */
+    padding-bottom: 10px;
+  }
+  
+  /* List styling */
+  .diagnosis-container ul {
+    list-style: none; /* Remove default list style */
+    margin: 10px 0 0;
+    padding: 0;
+  }
+  
+  /* List item styling */
+  .diagnosis-container ul li {
+    background-color: #ffffff; /* White background for each item */
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0; /* Add subtle border */
+    transition: transform 0.2s, background-color 0.3s;
+  }
+  
+  /* Hover effect for list items */
+  .diagnosis-container ul li:hover {
+    transform: translateX(5px); /* Slide effect */
+    background-color: #e6ffe6; /* Light green on hover */
+  }
+
+  /* Styling for the diagnosis container */
+.diagnosis-container {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #e9f7ef; /* Light green background for health theme */
+    border-radius: 10px; /* Rounded corners for a modern look */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    max-width: 600px; /* Restrict the width for better readability */
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #c3e6cb; /* Border to define the section */
+  }
+  
+  /* Styling for the heading */
+  .diagnosis-container h3 {
+    color: #155724; /* Dark green for the heading */
+    font-size: 1.8rem;
+    text-align: center; /* Center the heading */
+    margin-bottom: 15px; /* Space below the heading */
+  }
+  
+  /* Styling for the list */
+  .diagnosis-list {
+    list-style-type: none; /* Remove default bullets */
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Styling for each list item */
+  .diagnosis-list li {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa; /* Light gray background for items */
+    border-radius: 5px; /* Rounded edges for individual items */
+    display: flex;
+    align-items: center;
+    border: 1px solid #d6d8db; /* Slight border for definition */
+  }
+  
+  /* Label styling */
+  .recommendation-label {
+    font-weight: bold; /* Highlight "Recommendation" */
+    margin-right: 5px; /* Space between label and text */
+    color: #155724;
+  }
+
+  /* Styling for the recommendation text */
+.recommendation-text {
+    font-weight: bold; /* Make the text bold */
+    color: #155724; /* Dark green for consistency with health theme */
+    font-size: 1.1rem; /* Slightly larger font size for emphasis */
+    background-color: #d4edda; /* Light green background to highlight */
+    padding: 5px 10px; /* Add padding for visual comfort */
+    border-radius: 5px; /* Rounded edges for a modern look */
+    margin-left: 5px; /* Add space between label and text */
+    display: inline-block; /* Ensure proper spacing around the text */
+  }
+  
+  
+  
+
