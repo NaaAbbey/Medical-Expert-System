@@ -1,9 +1,12 @@
 from flask import Flask, request, jsonify
-from experta import *
-import psycopg2
+from flask_cors import CORS
+from experta import *, Rule
+#import psycopg2
 from psycopg2.extras import RealDictCursor
+import pg8000
 
 app = Flask(__name__)
+CORS(app)
 
 
 # Database configuration

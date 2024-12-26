@@ -1,5 +1,9 @@
 import { useState } from 'react';
+<<<<<<< HEAD
 import { processSymptom } from '../services/api'
+=======
+import { diagnoseSymptoms } from '../services/api'
+>>>>>>> e7e3f510b8699f268d099474f9f34f7e5006b269
 import './form.css'
 
 const SymptomForm = () => {
@@ -9,7 +13,11 @@ const SymptomForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const symptomList = symptoms.split(',').map(s => s.trim());
+<<<<<<< HEAD
         const response = await processSymptom(symptomList);
+=======
+        const response = await diagnoseSymptoms(symptomList);
+>>>>>>> e7e3f510b8699f268d099474f9f34f7e5006b269
         console.log(response.data)
         setDiagnosis(response.data.recommendation);
     };
