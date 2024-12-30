@@ -57,14 +57,19 @@ class TreatmentEngine(KnowledgeEngine):
         self.conn = get_db_connection()
 
     def get_treatment_from_db(self, symptom):
-        """Query database for treatment, cause, and disease."""
         with self.conn.cursor() as cur:
-            cur.execute(
-                "SELECT medicine, causes, disease FROM medical_data WHERE symptoms = %s",
-                (symptom,)
-            )
-            result = cur.fetchone()
-            return result
+            # Query to find the most common treatment for a symptom
+            cur.execute("""
+                SELECT medicine, causes, disease, COUNT(*) AS frequency
+                FROM medical_data
+                WHERE symptoms = %s
+                GROUP BY medicine, causes, disease
+                ORDER BY frequency DESC
+                LIMIT 1
+            """, (symptom,))
+            return cur.fetchone()
+
+
 
     @Rule(Symptom(name=MATCH.symptom))
     def symptom_rule(self, symptom):
@@ -76,7 +81,7 @@ class TreatmentEngine(KnowledgeEngine):
             self.declare(Treatment(treatment=data["medicine"]))
 
 
-@app.route('/predict', methods=['POST'])
+@app.route('/api/predict', methods=['POST'])
 def predict():
     user_input = request.json
     symptoms = user_input.get("symptoms", "").strip()
@@ -103,4 +108,4 @@ def predict():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5000) 

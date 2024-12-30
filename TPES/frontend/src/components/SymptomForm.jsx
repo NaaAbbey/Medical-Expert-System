@@ -1,26 +1,31 @@
 import { useState } from 'react';
-<<<<<<< HEAD
 import { processSymptom } from '../services/api'
-=======
-import { diagnoseSymptoms } from '../services/api'
->>>>>>> e7e3f510b8699f268d099474f9f34f7e5006b269
 import './form.css'
 
 const SymptomForm = () => {
     const [symptoms, setSymptoms] = useState('');
-    const [diagnosis, setDiagnosis] = useState([]);
+    const [treatment, setTreatment] = useState('');
+    const [cause, setCause] = useState('');
+    const [disease, setDisease] = useState('');
+
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        const symptomList = symptoms.split(',').map(s => s.trim());
-<<<<<<< HEAD
-        const response = await processSymptom(symptomList);
-=======
-        const response = await diagnoseSymptoms(symptomList);
->>>>>>> e7e3f510b8699f268d099474f9f34f7e5006b269
-        console.log(response.data)
-        setDiagnosis(response.data.recommendation);
-    };
+      e.preventDefault();
+      try {
+        console.log("Sending symptom:", symptoms);
+        const response = await processSymptom(symptoms);
+        console.log(response)
+
+        setTreatment(response.treatment);
+        setDisease(response.disease);
+        setCause(response.cause);
+        console.log(response)
+      } catch (error) {
+          console.log("An error occurred:", error);
+          alert("An error occurred. Please try again.");
+      }
+  };
+  
 
     return (
         <div>
@@ -34,23 +39,23 @@ const SymptomForm = () => {
                 />
                 <button className='diagnose-button'  type="submit">Diagnose</button>
             </form>
-            {diagnosis && (
-        <div className="diagnosis-container">
-          <h3>Diagnosis Result:</h3>
-          <ul  className="diagnosis-list">
-            {diagnosis.map((d, index) => (
-           
-              
-              <li key={index}>
-                 <span className="recommendation-label">Recommendation:</span> 
-                 <span className="recommendation-text">{d}</span>
-                </li>
-             
-            ))}
-          </ul>
-        </div>
-      )}
-        </div>
+            {treatment && (
+              <div className="treatment-container">
+                <h3>treatment Result:</h3>
+                <ul  className="treatment-list">
+                  {treatment.map((d, index) => (
+                
+                    
+                    <li key={index}>
+                      <span className="recommendation-label">Recommendation:</span> 
+                      <span className="recommendation-text">{d}</span>
+                      </li>
+                  
+                  ))}
+                </ul>
+              </div>
+            )}
+              </div>
     );
 };
 
