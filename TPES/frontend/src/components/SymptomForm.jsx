@@ -12,8 +12,8 @@ const SymptomForm = () => {
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        console.log("Sending symptom:", symptoms);
-        const response = await processSymptom(symptoms);
+        console.log("Sending symptom:", capitalizeInput(symptoms));
+        const response = await processSymptom(capitalizeInput(symptoms));
         console.log(response)
 
         setTreatment(response.treatment);
@@ -26,7 +26,12 @@ const SymptomForm = () => {
       }
   };
   
-
+  const capitalizeInput = (input) => {
+    if (!input) {
+      return ''; // Return an empty string if name is undefined or null
+    }
+    return input.trim().split([' ', ","]).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  };
     return (
         <div>
             <form onSubmit={handleSubmit}>
