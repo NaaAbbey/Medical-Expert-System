@@ -33,18 +33,21 @@ const SymptomForm = () => {
     return input.trim().split([' ', ","]).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
   };
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <textarea 
-                 className="styled-placeholder"
-                     style={{marginTop:'10rem' ,marginRight:'5rem',width:'20rem', borderRadius:'2rem'}}
+        <div className='flex flex-col-reverse items-center   justify-start pb-6 h-full  '>
+        
+            <div className="border-2 border-gray-600 rounded-lg w-full flex pe-4">
+            <form onSubmit={handleSubmit} className='flex items-center justify-between w-full '>
+                <input 
+                 className="border-none w-full outline-none h-12 px-4 rounded-lg"
                     placeholder="Enter symptoms separated by commas"
                     value={symptoms}
                     onChange={(e) => setSymptoms(e.target.value)}
                 />
-                <button className='diagnose-button'  type="submit">Diagnose</button>
+                <button className='h-8 w-8 flex items-center justify-center' type="submit"></button>
             </form>
-            {treatment && (
+            </div>
+            <div className="flex justify-center h-full">
+              {treatment && (
               <div className="treatment-container">
                 <h3>treatment Result:</h3>
                 <ul  className="treatment-list">
@@ -60,6 +63,7 @@ const SymptomForm = () => {
                 </ul>
               </div>
             )}
+            </div>
               </div>
     );
 };
