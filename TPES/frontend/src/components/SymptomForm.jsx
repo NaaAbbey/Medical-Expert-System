@@ -9,6 +9,19 @@ const SymptomForm = () => {
     const [disease, setDisease] = useState('');
 
 
+    const capitalizeInput= (input) => {
+      if (input){
+      return input.split(/(\s|,)/).map(segment => {
+          if (segment.trim()) {
+              // Capitalize the first letter of the word, keep the rest lowercase
+              return segment.charAt(0).toUpperCase() + segment.slice(1).toLowerCase();
+          }
+          return segment; // Return spaces or commas unchanged
+      }).join('');
+    }
+    }
+    
+
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
@@ -26,12 +39,7 @@ const SymptomForm = () => {
       }
   };
   
-  const capitalizeInput = (input) => {
-    if (!input) {
-      return ''; // Return an empty string if name is undefined or null
-    }
-    return input.trim().split([' ', ","]).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-  };
+
     return (
         <div className='flex flex-col-reverse items-center   justify-start pb-6 h-full  '>
         
@@ -47,23 +55,25 @@ const SymptomForm = () => {
             </form>
             </div>
             <div className="flex justify-center h-full">
-              {treatment && (
-              <div className="treatment-container">
-                <h3>treatment Result:</h3>
-                <ul  className="treatment-list">
-                  {treatment.map((d, index) => (
-                
-                    
-                    <li key={index}>
-                      <span className="recommendation-label">Recommendation:</span> 
-                      <span className="recommendation-text">{d}</span>
-                      </li>
-                  
-                  ))}
-                </ul>
-              </div>
-            )}
+              { treatment && (
+                <div className="treatment-container">
+                  <h3>Results:</h3>
+                    <p>
+                      <span className='text-xl '>Cause: </span>
+                      {cause}
+                    </p>
+                    <p>
+                      <span className='text-xl '>Disease: </span>
+                      {disease}
+                    </p>
+                    <p>
+                      <span className='text-xl '>Treatment: </span>
+                      {treatment}
+                    </p>
+                </div>
+              )}
             </div>
+
               </div>
     );
 };
