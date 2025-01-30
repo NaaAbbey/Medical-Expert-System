@@ -1,0 +1,7 @@
+- ask user for symptom
+- fetch from database all rows that contain(like) symptom 
+- loop through resulting rows, split by commas.
+- ask user if they experience symptoms from rows
+* if yes add to initial symptome and produce result
+* if no continue loop till a match is found
+* if no match found at end of loop, check if there esxists a row with the inital symtom an produce result.
