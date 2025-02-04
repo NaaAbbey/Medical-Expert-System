@@ -1,57 +1,115 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import bg from '../assets/bg.svg'
 import MedEx from '../assets/MedEx.svg'
 import ST from '../assets/stethoscope.svg'
 import SendIcon from '../assets/SendIcon.svg'
+import axios from "axios";
+import { processSymptom } from '../services/api';
 
 const LandingPage = () => {
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isInputDisabled, setIsInputDisabled] = useState(false);
+  const [showYesNoButtons, setShowYesNoButtons] = useState(false);
+  const [symptom, setsymptom] = useState('');
+  const [treatment, setTreatment] = useState(null);
+  const [cause, setCause] = useState(null);
+  const [diagnosis, setDiagnosis] = useState(null);
+  const [message, setMessage] = useState('');
+  const [result, setResult] = useState(null)
+  //const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
 
-  const botResponses = [
-    "Hello! How can I help?",
-    "That's interesting!",
-    "Can you tell me more?",
-    "I see! What else?",
-    "That's a great question!"
-  ];
-
-  const handleSendMessage = (text, sender = 'user') => {
-    setMessages((prevMessages) => [...prevMessages, { text, sender }]);
-
-    {/**const messageStyle =(message) => {
-      if(message.sender === 'user' && message.text === 'Yes'){
-
-        return 'bg-[#BFF5BA] text-[#0D5310]  rounded-ss-3xl rounded-se-3xl rounded-bl-3xl rounded-br  h-10 flex items-center justify-end px-12'
-      } else if (message.sender === 'user' && message.text === 'No'){
-
-        return 'bg-[#FFC5C5] text-[#6E0808]  rounded-ss-3xl rounded-se-3xl rounded-bl-3xl rounded-br  h-10 flex items-center justify-end px-12'
-
-      } else {
-        return 'bg-white rounded-ss-3xl rounded-se-3xl rounded-br-3xl rounded-bl  h-10 flex items-center justify-end text-gray-600' 
-      }
-    } **/}
-
-    // Simulate a bot response after 1 second
-    if (sender === 'user') {
-      setTimeout(() => {
-        const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
-        setMessages((prevMessages) => [...prevMessages, { text: randomResponse, sender: 'bot' },]);
-        setIsGenerating(false);
-      }, 1000);
+  const resetSession = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/reset");
+      console.log("Session reset successfully.");
+    } catch (error) {
+      console.error("Error resetting session:", error);
     }
   };
 
- 
-  const handleSubmit = (e) => {
+  // Reset session when the page loads
+  useEffect(() => {
+    resetSession();
+  }, []); // Empty dependency array ensures it runs only once on page load
+
+
+  const handleYesNo = async (response) => {
+    // Add user response
+    setAnswer(response);
+    setMessages((prev) => [...prev, { sender: "user", text: response }] 
+  )};
+
+
+  const capitalizeInput = (input) => {
+    if (!input) {
+      return ''; // Return an empty string if input is undefined or null
+    }
+    return input.trim().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  };
+    
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (input.trim()) {
-      handleSendMessage(input);
-      setInput('');
-      setIsGenerating(true);
+    
+     // Ensure the symptom is always included
+     const payload = { symptom: capitalizeInput(symptom) };
+
+      // Add user message
+    const userMessage = { sender: "user", text: capitalizeInput(symptom) };
+    setMessages((prev) => [...prev, userMessage]);
+
+    // Disable input and show Yes/No buttons
+    setIsInputDisabled(true);
+    setShowYesNoButtons(true);
+
+     // If an answer exists, include it in the payload
+     if (answer.trim()) {
+         payload.answer = answer;
+     }
+
+    try {
+      console.log("ans: ", payload)
+
+        const response = await processSymptom(payload);
+        console.log(response.data)
+
+         // Add bot response
+        const botMessage = { sender: "bot", text: response.data.reply };
+        setMessages((prev) => [...prev, botMessage]);
+
+
+        // Update state based on response conditions
+        if (response.data.diagnosis && response.data.treatment) {
+          setDiagnosis(response.data.diagnosis);
+          setTreatment(response.data.treatment);
+          setCause(response.data.cause);
+          setResult(`Diagnosis: ${response.data.diagnosis}
+            Cause: ${response.data.cause}
+            Treatment: ${response.data.treatment}`);            
+            
+          //setQuestion("");
+          // resetSession();
+        } else if (response.data.question) {
+          setResult(response.data.question)
+          //setQuestion(response.data.question);
+        } else {
+          setResult("Unexpected error" )
+          
+        }
+        setMessages((prev) => [
+          ...prev,
+          { sender: "bot", text: result},
+        ]);
+        // Reset answer field after each submission
+        setAnswer('');
+    } catch (error) {
+        console.error('Error:', error);
+        setMessage('An error occurred. Please try again.');
     }
   };
+  
+
   return (
     <>
       <div className='flex items-center justify-center'>
@@ -95,18 +153,30 @@ const LandingPage = () => {
                   className='w-full h-7 outline-none'
                   type="text"
                   placeholder='Enter your symptom...'
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  disabled={isGenerating}
+                  value={symptom}
+                  onChange={(e) => setsymptom(e.target.value)}
+                  disabled={isInputDisabled}
                 />
                 <button className='flex items-center justify-center' type="submit">
                   <img className='w-5 outline-none' src={SendIcon} alt="Send" />
                 </button>
               </div>
-              <div className="flex items-center justify-center">
-                <button onClick={() => handleSendMessage("No")}  disabled={isGenerating} className="bg-[#FFC5C5] text-[#6E0808] h-10 w-[50%] rounded-none rounded-bl-2xl hover:outline-none">No</button>
-                <button onClick={() => handleSendMessage("Yes")} disabled={isGenerating} className="bg-[#BFF5BA] text-[#0D531A] h-10 w-[50%] rounded-none rounded-br-2xl hover:outline-none">Yes</button>
-              </div>
+              {showYesNoButtons && (
+                  <div className="flex items-center justify-center">
+                    <button
+                      onClick={() => handleYesNo("Yes")}
+                      className="bg-[#BFF5BA] text-[#0D531A] h-10 w-[50%] rounded-none rounded-br-2xl hover:outline-none"
+                      >
+                      Yes
+                    </button>
+                    <button
+                      onClick={() => handleYesNo("No")}
+                      className="bg-[#FFC5C5] text-[#6E0808] h-10 w-[50%] rounded-none rounded-bl-2xl hover:outline-none"
+                      >
+                        No
+                    </button>
+                  </div>
+                )}
             </form>
           </div>
         </div>
@@ -114,9 +184,7 @@ const LandingPage = () => {
       </div>
     </>
   )
-}
-
-export default LandingPage
+};
 
 
-
+export default LandingPage;
