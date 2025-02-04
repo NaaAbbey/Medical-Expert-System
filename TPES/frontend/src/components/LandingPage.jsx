@@ -7,6 +7,7 @@ import SendIcon from '../assets/SendIcon.svg'
 const LandingPage = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const botResponses = [
     "Hello! How can I help?",
@@ -36,7 +37,8 @@ const LandingPage = () => {
     if (sender === 'user') {
       setTimeout(() => {
         const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
-        setMessages((prevMessages) => [...prevMessages, { text: randomResponse, sender: 'bot' }]);
+        setMessages((prevMessages) => [...prevMessages, { text: randomResponse, sender: 'bot' },]);
+        setIsGenerating(false);
       }, 1000);
     }
   };
@@ -47,6 +49,7 @@ const LandingPage = () => {
     if (input.trim()) {
       handleSendMessage(input);
       setInput('');
+      setIsGenerating(true);
     }
   };
   return (
@@ -94,14 +97,15 @@ const LandingPage = () => {
                   placeholder='Enter your symptom...'
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
+                  disabled={isGenerating}
                 />
                 <button className='flex items-center justify-center' type="submit">
-                  <img className='w-5' src={SendIcon} alt="Send" />
+                  <img className='w-5 outline-none' src={SendIcon} alt="Send" />
                 </button>
               </div>
               <div className="flex items-center justify-center">
-                <button onClick={() => handleSendMessage("No")} className="bg-[#FFC5C5] text-[#6E0808] h-10 w-[50%] rounded-none rounded-bl-2xl hover:outline-none">No</button>
-                <button onClick={() => handleSendMessage("Yes")} className="bg-[#BFF5BA] text-[#0D531A] h-10 w-[50%] rounded-none rounded-br-2xl hover:outline-none">Yes</button>
+                <button onClick={() => handleSendMessage("No")}  disabled={isGenerating} className="bg-[#FFC5C5] text-[#6E0808] h-10 w-[50%] rounded-none rounded-bl-2xl hover:outline-none">No</button>
+                <button onClick={() => handleSendMessage("Yes")} disabled={isGenerating} className="bg-[#BFF5BA] text-[#0D531A] h-10 w-[50%] rounded-none rounded-br-2xl hover:outline-none">Yes</button>
               </div>
             </form>
           </div>
