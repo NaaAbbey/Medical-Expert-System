@@ -1,15 +1,16 @@
-//import { useState } from 'react'
+
+import LandingPage from './components/LandingPage';
 //import reactLogo from './assets/react.svg'
 //import viteLogo from '/vite.svg'
 import SymptomForm from './components/SymptomForm'
 import './App.css'
 
 function App() {
-  //const [count, setCount] = useState(0)
+
 
   return (
     <>
-      
+      {/*
       <div  className="grid grid-cols-5 min-h-screen bg-white h-screen w-screen" >
        <div className="col-span-1 bg-white flex items-end justify-center pb-6">
         <div className="h-[43rem] w-[16rem] bg-[#02040F] rounded-lg p-4 border-white border-2 shadow flex flex-col justify-between">
@@ -40,6 +41,41 @@ function App() {
           </div>
         </div>
     </div>
+     <div className="flex flex-col justify-between h-screen bg-gray-100">
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="space-y-4">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`max-w-xs p-3 rounded-lg text-white ${
+                  message.sender === 'user' ? 'bg-blue-500' : 'bg-gray-500'
+                }`}
+              >
+                {message.text}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <form onSubmit={handleSubmit} className="flex items-center p-4 bg-white shadow-md">
+        <input
+          type="text"
+          className="flex-1 p-2 border rounded-l-lg border-gray-300"
+          placeholder="Type a message..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <button type="submit" className="bg-blue-500 text-white p-2 rounded-r-lg">
+          Send
+        </button>
+      </form>
+    </div>
+    */}
+    <LandingPage />
     </>
   )
 }
