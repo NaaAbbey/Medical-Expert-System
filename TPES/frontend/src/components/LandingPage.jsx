@@ -65,6 +65,8 @@ const LandingPage = () => {
          payload.answer = answer;
      }
 
+     if (!symptom.trim()) return;
+
     try {
       console.log("ans: ", payload)
       const response = await processSymptom(payload);
@@ -89,6 +91,8 @@ const LandingPage = () => {
         setMessage('An error occurred. Please try again.');
         setIsInputDisabled(false);
     }
+
+    setsymptom("");
   };
   
 
@@ -147,13 +151,13 @@ const LandingPage = () => {
                   <div className="flex items-center justify-center">
                     <button
                       onClick={() => handleYesNo("Yes")}
-                      className="bg-[#BFF5BA] text-[#0D531A] h-10 w-[50%] rounded-none rounded-br-2xl hover:outline-none"
+                      className="bg-[#BFF5BA] text-[#0D531A] h-10 w-[50%] rounded-none rounded-bl-2xl hover:outline-none"
                       >
                       Yes
                     </button>
                     <button
                       onClick={() => handleYesNo("No")}
-                      className="bg-[#FFC5C5] text-[#6E0808] h-10 w-[50%] rounded-none rounded-bl-2xl hover:outline-none"
+                      className="bg-[#FFC5C5] text-[#6E0808] h-10 w-[50%] rounded-none rounded-br-2xl hover:outline-none"
                       >
                         No
                     </button>
