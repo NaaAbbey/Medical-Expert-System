@@ -1,4 +1,4 @@
-import { useState,useEffect } from 'react'
+import { useState,useEffect, useRef } from 'react'
 import bg from '../assets/bg.svg'
 import MedEx from '../assets/MedEx.svg'
 import ST from '../assets/stethoscope.svg'
@@ -13,6 +13,7 @@ const LandingPage = () => {
   const [symptom, setsymptom] = useState('');
   const [message, setMessage] = useState('');
   const [answer, setAnswer] = useState('');
+  const messagesEndRef = useRef(null);
 
   const resetSession = async () => {
     try {
@@ -28,6 +29,10 @@ const LandingPage = () => {
     resetSession();
   }, []); // Empty dependency array ensures it runs only once on page load
 
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleYesNo = async (response) => {
     // Add user response
@@ -71,11 +76,16 @@ const LandingPage = () => {
       console.log(response.data);
     
       const botMessageText = (response.data.diagnosis && response.data.treatment)
-      ? `Diagnosis: ${response.data.diagnosis}\n\n Cause: ${response.data.cause}\n\n Treatment: ${response.data.treatment}`
+      ? {
+        Diagnosis: response.data.diagnosis,
+        Cause: response.data.cause,
+        Treatment: response.data.treatment
+      }
       : response.data.question || "Unexpected error";
 
       if ((response.data.diagnosis && response.data.treatment) || !response.data.question) {
           setsymptom('');
+          setIsInputDisabled(false)
           setShowYesNoButtons(false);
       }
             
@@ -113,21 +123,30 @@ const LandingPage = () => {
                   className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-xs justify-center overflow-hidden   ${
+                    className={`max-w-xs  overflow-hidden   ${
                       message.sender === 'user' 
                       ? message.text === 'Yes' 
                         ? 'bg-[#BFF5BA] text-[#0D5310] rounded-ss-3xl rounded-se-3xl rounded-bl-3xl rounded-br  flex items-center justify-end px-12 py-2'
                         : message.text === 'No' 
                           ? 'bg-[#F5BABA] text-[#531010] rounded-ss-3xl rounded-se-3xl rounded-bl-3xl rounded-br flex items-center justify-end px-12 py-2'
                           : 'bg-white text-gray-700 rounded-ss-3xl rounded-se-3xl rounded-bl-3xl rounded-br  flex items-center justify-end px-4 py-2 '
-                      : 'bg-white text-gray-700 rounded-ss-3xl rounded-se-3xl rounded-br-3xl rounded-bl h-full w-full flex items-center justify-end px-4 py-2 '
+                      : 'bg-white text-gray-700 rounded-ss-3xl rounded-se-3xl rounded-br-3xl rounded-bl h-full flex items-center justify-start px-4 py-2 '
                       }`}
                   >
-                    {message.text}
+                    {message.text.Diagnosis?
+                    <div>
+                      <span className='font-semibold'>Diagnosis: </span> {message.text.Diagnosis} <br/>
+                      <span className='font-semibold '>Cause: </span> {message.text.Cause}<br/>
+                      <span className='font-semibold '>Treatment: </span> {message.text.Treatment}
+                    </div> 
+                    : <p>
+                       {message.text}
+                    </p>  }
                   </div>
                 </div>
               )))}
-              </div>
+              {/* Invisible div for auto-scrolling */}
+              <div ref={messagesEndRef} /></div>
             </div>
             <form onSubmit={handleSubmit} className="w-full flex flex-col justify-end">
               <div className="w-full items-center justify-center flex h-10 px-3 rounded-se-2xl rounded-ss-2xl bg-white ">
@@ -147,13 +166,13 @@ const LandingPage = () => {
                   <div className="flex items-center justify-center">
                     <button
                       onClick={() => handleYesNo("Yes")}
-                      className="bg-[#BFF5BA] text-[#0D531A] h-10 w-[50%] rounded-none rounded-br-2xl hover:outline-none"
+                      className="bg-[#BFF5BA] text-[#0D531A] h-10 w-[50%] rounded-none rounded-bl-2xl hover:outline-none"
                       >
                       Yes
                     </button>
                     <button
                       onClick={() => handleYesNo("No")}
-                      className="bg-[#FFC5C5] text-[#6E0808] h-10 w-[50%] rounded-none rounded-bl-2xl hover:outline-none"
+                      className="bg-[#FFC5C5] text-[#6E0808] h-10 w-[50%] rounded-none rounded-br-2xl hover:outline-none"
                       >
                         No
                     </button>
