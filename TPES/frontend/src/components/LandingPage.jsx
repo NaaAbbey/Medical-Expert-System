@@ -70,6 +70,8 @@ const LandingPage = () => {
          payload.answer = answer;
      }
 
+     if (!symptom.trim()) return;
+
     try {
       console.log("ans: ", payload)
       const response = await processSymptom(payload);
@@ -99,6 +101,8 @@ const LandingPage = () => {
         setMessage('An error occurred. Please try again.');
         setIsInputDisabled(false);
     }
+
+    setsymptom("");
   };
   
 
