@@ -11,12 +11,7 @@ const LandingPage = () => {
   const [isInputDisabled, setIsInputDisabled] = useState(false);
   const [showYesNoButtons, setShowYesNoButtons] = useState(false);
   const [symptom, setsymptom] = useState('');
-  const [treatment, setTreatment] = useState(null);
-  const [cause, setCause] = useState(null);
-  const [diagnosis, setDiagnosis] = useState(null);
   const [message, setMessage] = useState('');
-  const [result, setResult] = useState(null)
-  //const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
 
   const resetSession = async () => {
@@ -51,61 +46,48 @@ const LandingPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    console.log(isInputDisabled)
      // Ensure the symptom is always included
-     const payload = { symptom: capitalizeInput(symptom) };
+    const payload = { symptom: capitalizeInput(symptom) };
+    
 
-      // Add user message
-    const userMessage = { sender: "user", text: capitalizeInput(symptom) };
-    setMessages((prev) => [...prev, userMessage]);
+    if (!isInputDisabled) {
+      // Add user message only if input is enabled
+      setMessages((prev) => [...prev, { sender: "user", text: capitalizeInput(symptom) }]);
+    }
 
     // Disable input and show Yes/No buttons
     setIsInputDisabled(true);
     setShowYesNoButtons(true);
 
-     // If an answer exists, include it in the payload
-     if (answer.trim()) {
+    // If an answer exists, include it in the payload
+    if (answer.trim()) {
          payload.answer = answer;
      }
 
     try {
       console.log("ans: ", payload)
+      const response = await processSymptom(payload);
+      console.log(response.data);
+    
+      const botMessageText = (response.data.diagnosis && response.data.treatment)
+      ? `Diagnosis: ${response.data.diagnosis}\n\n Cause: ${response.data.cause}\n\n Treatment: ${response.data.treatment}`
+      : response.data.question || "Unexpected error";
 
-        const response = await processSymptom(payload);
-        console.log(response.data)
-
-         // Add bot response
-        const botMessage = { sender: "bot", text: response.data.reply };
-        setMessages((prev) => [...prev, botMessage]);
-
-
-        // Update state based on response conditions
-        if (response.data.diagnosis && response.data.treatment) {
-          setDiagnosis(response.data.diagnosis);
-          setTreatment(response.data.treatment);
-          setCause(response.data.cause);
-          setResult(`Diagnosis: ${response.data.diagnosis}
-            Cause: ${response.data.cause}
-            Treatment: ${response.data.treatment}`);            
+      if ((response.data.diagnosis && response.data.treatment) || !response.data.question) {
+          setsymptom('');
+          setShowYesNoButtons(false);
+      }
             
-          //setQuestion("");
-          // resetSession();
-        } else if (response.data.question) {
-          setResult(response.data.question)
-          //setQuestion(response.data.question);
-        } else {
-          setResult("Unexpected error" )
-          
-        }
-        setMessages((prev) => [
-          ...prev,
-          { sender: "bot", text: result},
-        ]);
-        // Reset answer field after each submission
-        setAnswer('');
+      const botMessage = { sender: "bot", text: botMessageText };
+      setMessages((prev) => [...prev, botMessage]);
+      console.log(messages)
+      
+      setAnswer('');
     } catch (error) {
         console.error('Error:', error);
         setMessage('An error occurred. Please try again.');
+        setIsInputDisabled(false);
     }
   };
   
@@ -125,26 +107,26 @@ const LandingPage = () => {
           <div className="h-full w-full flex flex-col">
             <div className="w-full h-[24.7rem]  overflow-y-auto p-4 scrollbar-hide ">
               <div className="space-y-4">
-              {messages.map((message, index) => (
+              {messages && (messages.map((message, index) => (
                 <div
-                  key={index}
+                  key= {index}
                   className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-xs break-all overflow-hidden   ${
+                    className={`max-w-xs justify-center overflow-hidden   ${
                       message.sender === 'user' 
                       ? message.text === 'Yes' 
                         ? 'bg-[#BFF5BA] text-[#0D5310] rounded-ss-3xl rounded-se-3xl rounded-bl-3xl rounded-br  flex items-center justify-end px-12 py-2'
                         : message.text === 'No' 
                           ? 'bg-[#F5BABA] text-[#531010] rounded-ss-3xl rounded-se-3xl rounded-bl-3xl rounded-br flex items-center justify-end px-12 py-2'
                           : 'bg-white text-gray-700 rounded-ss-3xl rounded-se-3xl rounded-bl-3xl rounded-br  flex items-center justify-end px-4 py-2 '
-                      : 'bg-white text-gray-700 rounded-ss-3xl rounded-se-3xl rounded-br-3xl rounded-bl h-10 flex items-center justify-end px-4 py-2 '
+                      : 'bg-white text-gray-700 rounded-ss-3xl rounded-se-3xl rounded-br-3xl rounded-bl h-full w-full flex items-center justify-end px-4 py-2 '
                       }`}
                   >
                     {message.text}
                   </div>
                 </div>
-              ))}
+              )))}
               </div>
             </div>
             <form onSubmit={handleSubmit} className="w-full flex flex-col justify-end">
