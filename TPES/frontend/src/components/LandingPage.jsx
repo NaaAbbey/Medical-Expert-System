@@ -33,7 +33,6 @@ const LandingPage = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
   const handleYesNo = async (response) => {
     // Add user response
     setAnswer(response);
@@ -70,8 +69,6 @@ const LandingPage = () => {
          payload.answer = answer;
      }
 
-     if (!symptom.trim()) return;
-
     try {
       console.log("ans: ", payload)
       const response = await processSymptom(payload);
@@ -101,8 +98,6 @@ const LandingPage = () => {
         setMessage('An error occurred. Please try again.');
         setIsInputDisabled(false);
     }
-
-    setsymptom("");
   };
   
 
@@ -140,7 +135,7 @@ const LandingPage = () => {
                     {message.text.Diagnosis?
                     <div>
                       <span className='font-semibold'>Diagnosis: </span> {message.text.Diagnosis} <br/>
-                      <span className='font-semibold '>Cause: </span> {message.text.Cause}<br/>
+                      <span className='font-semibold '>Possible Cause: </span> {message.text.Cause}<br/>
                       <span className='font-semibold '>Treatment: </span> {message.text.Treatment}
                     </div> 
                     : <p>
@@ -149,8 +144,8 @@ const LandingPage = () => {
                   </div>
                 </div>
               )))}
-              {/* Invisible div for auto-scrolling */}
-              <div ref={messagesEndRef} /></div>
+                {/* Invisible div for auto-scrolling */}
+                <div ref={messagesEndRef} /></div> 
             </div>
             <form onSubmit={handleSubmit} className="w-full flex flex-col justify-end">
               <div className="w-full items-center justify-center flex h-10 px-3 rounded-se-2xl rounded-ss-2xl bg-white ">
