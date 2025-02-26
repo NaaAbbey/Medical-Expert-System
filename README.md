@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is an AI-driven **Medical Expert System** designed to diagnose diseases based on symptoms provided by the user. It suggests possible diagnoses, causes, and treatments using an expert rule-based approach.
+This is an AI-driven **Medical Expert System** designed to diagnose diseases based on symptoms provided by the user. Using an expert rule-based approach, it suggests possible diagnoses, causes, and treatments.
 
 ## Features
 - Accepts user-reported symptoms.
@@ -14,8 +14,8 @@ This is an AI-driven **Medical Expert System** designed to diagnose diseases bas
 
 ## How the Expert System Works
 1. User provides a symptom.
-2. System queries database for matching diseases.
-3. If multiple matches, asks follow-up questions.
+2. System queries the database for matching diseases.
+3. If multiple matches, ask follow-up questions.
 4. Returns best match diagnosis, cause, and treatment.
 
 ## How The System Looks
@@ -41,7 +41,7 @@ Ensure you have the following installed:
 ### Backend Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/medical-expert-system.git
+   git clone https://github.com/NaaAbbey/medical-expert-system.git
    cd TPES/backend
    ```
 2. Create a virtual environment and activate it:
